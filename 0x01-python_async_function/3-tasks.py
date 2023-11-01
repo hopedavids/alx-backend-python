@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 
-""" Import wait_random from 0-basic_async_syntax. """
-
-
 import asyncio
+import random
+from typing import Any
 
-wait_random = __import__('0-basic_async_syntax').wait_random
+
+async def wait_random(max_delay=10):
+    random_delay = random.uniform(0, max_delay)
+    await asyncio.sleep(random_delay)
+    return random_delay
 
 
-def task_wait_random(max_delay: int):
-    """ Write a function (do not create an async function,
-        use the regular function syntax to do this) task_wait_random
-        that takes an integer max_delay and returns a asyncio.Task.
-    """
-    task = asyncio.create_task(wait_random(max_delay))
+def task_wait_random(max_delay: int) -> asyncio.Task:
+    loop = asyncio.get_event_loop()
+    coro = wait_random(max_delay)
+    task = loop.create_task(coro)
     return task
