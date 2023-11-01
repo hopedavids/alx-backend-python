@@ -3,7 +3,7 @@
 import asyncio
 import random
 
-""" The basics of async. """
+""" The basics of async. asynchronous coroutine that takes in an integer"""
 
 
 async def wait_random(max_delay: int = 10) -> float:
