@@ -1,20 +1,25 @@
 #!/usr/bin/env python3
 
-""" Measure the runtime. """
-
 import asyncio
 import time
+import random  # Import the random module here
 from typing import List
 
-wait_n = __import__('1-concurrent_coroutines').wait_n
+
+async def wait_random(max_delay=10):
+    random_delay = random.uniform(0, max_delay)
+    await asyncio.sleep(random_delay)
+    return random_delay
 
 
-async def measure_time(n: int, max_delay: int) -> float:
+async def wait_n(n: int, max_delay: int) -> List[float]:
+    tasks = [wait_random(max_delay) for _ in range(n)]
+    delays = await asyncio.gather(*tasks)
+    return sorted(delays)
+
+
+def measure_time(n: int, max_delay: int) -> float:
     start_time = time.time()
-    total_time = await wait_n(n, max_delay)
-    end_time = time.time()
-
-    elapsed_time = end_time - start_time
-
-    avg_time = elapsed_time / n
-    return avg_time
+    asyncio.run(wait_n(n, max_delay))
+    total_time = time.time() - start_time
+    return total_time / n
